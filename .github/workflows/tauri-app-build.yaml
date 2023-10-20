@@ -22,7 +22,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
-          repository: 'blui'
+          repository: 'bluecopa/blui'
           ref: 'tauri-updater'
           token: ${{ secrets.PAT }}
       # for projects that use labels and PRs,
