@@ -70,3 +70,18 @@ jobs:
             See the assets to download this version and install.
           releaseDraft: false
           prerelease: false
+          run: |
+            echo "version=__VERSION__" >> $GITHUB_OUTPUT
+  update:
+    needs: release
+    runs-on: ubuntu-latest
+    steps:
+      - name: Call update API
+        uses: indiesdev/curl@v1.1
+        with:
+          # The target URL
+          # Required: true if custom-config is not set
+          url: ${{secrets.VERCEL_APP_CACHE_KV_REST_API_URL}}/set/latest_release
+          bearer-token: ${{ secrets.VERCEL_APP_CACHE_KV_REST_API_TOKEN }}
+          body: '{"desktop":${{needs.release.steps.build_app.outputs.version}}}'
+ 
