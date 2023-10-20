@@ -80,6 +80,7 @@ jobs:
           # The target URL
           # Required: true if custom-config is not set
           url: ${{secrets.VERCEL_APP_CACHE_KV_REST_API_URL}}/set/latest_release
+          method: 'POST'
           body: '{"desktop":${{needs.release.steps.build_app.outputs.releaseId}}}'
           headers: '{ "Authorization": "Bearer ${{ secrets.VERCEL_APP_CACHE_KV_REST_API_TOKEN }}" }'
  
