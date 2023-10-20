@@ -70,8 +70,3 @@ jobs:
             See the assets to download this version and install.
           releaseDraft: false
           prerelease: false
-      - name: Publish artifacts
-        uses: actions/upload-artifact@v2
-        with:
-          name: tauri-app
-          path: apps/tauri-app/tauri-app/dist
