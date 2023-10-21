@@ -76,7 +76,7 @@ jobs:
             See the assets to download this version and install.
           releaseDraft: false
           prerelease: false
-          releaseId: ${{github.event.inputs.version}}
+          releaseId: v${{github.event.inputs.version}}
   update:
     needs: release
     runs-on: ubuntu-latest
@@ -88,6 +88,6 @@ jobs:
           # Required: true if custom-config is not set
           url: ${{secrets.VERCEL_APP_CACHE_KV_REST_API_URL}}/set/latest_release
           method: 'POST'
-          body: '{"desktop":"${{github.event.inputs.version}}" }'
+          body: '{"desktop":"v${{github.event.inputs.version}}" }'
           headers: '{ "Authorization": "Bearer ${{ secrets.VERCEL_APP_CACHE_KV_REST_API_TOKEN }}" }'
  
