@@ -1,0 +1,20 @@
+name: Update remote
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        required: true
+jobs:
+  release:
+    strategy:
+      fail-fast: false
+    runs-on: ubuntu-latest
+    steps:
+      - name: Update Version for Desktop App
+        run: |
+          curl --location '${{secrets.VERCEL_APP_CACHE_KV_REST_API_URL}}/set/latest_release' \
+          --header 'Authorization: Bearer ${{secrets.VERCEL_APP_CACHE_KV_REST_API_TOKEN}}' \
+          --header 'Content-Type: application/json' \
+          --data '{
+            "desktop": {{github.event.inputs.version}}
+            }'
