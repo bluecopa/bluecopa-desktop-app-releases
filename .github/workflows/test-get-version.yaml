@@ -24,7 +24,7 @@ jobs:
       - name: Bump version
         id: bump_version
         run: |
-          echo `version=$(npx -y run-func .public/getVersion.js getVersionParseRelease ${{ github.event.inputs.bumpType }})` >> $GITHUB_OUTPUT
+          echo "version=$(npx -y run-func .public/getVersion.js getVersionParseRelease ${{ github.event.inputs.bumpType }})" >> $GITHUB_OUTPUT
       - name: Print previous
         run: |
           echo ${{steps.bump_version.outputs.version}}
