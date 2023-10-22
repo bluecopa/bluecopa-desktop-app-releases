@@ -3,6 +3,7 @@ on:
   workflow_dispatch:
     inputs:
       bumpType:
+        description: 'Update type(major, minor, patch)'
         type: choice
         options:
           - major
@@ -17,7 +18,8 @@ jobs:
     - name: Bump version
       id: bump_version
       run: |
-        echo "version"=node .public/getVersion.js ${{github.event.inputs.bumpType}} >> $GITHUB_OUTPUT
+        version=$(npx -y run-func .public/getVersion.js getVersionParseRelease 'patch') && |
+        echo "version=$version" >> $GITHUB_OUTPUT
     - name: Print previous
       run: |
         echo ${{steps.bump_version.version}}
