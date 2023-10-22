@@ -1,4 +1,4 @@
-name: Copa Desktop app builder
+name: Copa Test version finder
 on:
   workflow_dispatch:
     inputs:
