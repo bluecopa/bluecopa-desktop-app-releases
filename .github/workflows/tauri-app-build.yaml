@@ -4,11 +4,12 @@ on:
     inputs:
       branch:
         required: true
-        default: tauri-updater
+        default: tauri
       version:
         required: true
         default: 0.0.2
-
+      changelog:
+        required: true
 jobs:
   release:
     strategy:
@@ -57,7 +58,7 @@ jobs:
         uses: swatinem/rust-cache@v2
         with:
           workspaces: './src-tauri -> target'
-          
+
       - name: Install dependencies (ubuntu only)
         if: matrix.platform == 'ubuntu-latest'
         run: |
