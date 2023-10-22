@@ -66,7 +66,7 @@ jobs:
         id: pnpm-cache
         with:
           path: pnpm-lock.yaml
-          key: ${{ runner.os }}-${{ hashFiles('**/lockfiles') }}
+          key: ${{ runner.os }}-${{ hashFiles('pnpm-lock.yaml') }}
       - name: Install web dependencies
         if: steps.pnpm-cache.outputs.cache-hit != 'true'
         run: pnpm install
@@ -76,7 +76,7 @@ jobs:
         uses: actions/cache/save@v3
         with:
           path: pnpm-lock.yaml
-          key: ${{ runner.os }}-${{ hashFiles('**/lockfiles') }}
+          key: ${{ runner.os }}-${{ hashFiles('pnpm-lock.yaml') }}
       - name: Navigate to tauri-app & Build web
         run: pwd && cd apps/tauri-app && pnpm build        
       - name: Build the app

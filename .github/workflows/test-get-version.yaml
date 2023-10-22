@@ -1,0 +1,26 @@
+name: Copa Desktop app builder
+on:
+  workflow_dispatch:
+    inputs:
+      bumpType:
+        type: choice
+        options:
+          - major
+          - minor
+          - patch
+        required: true
+        default: patch
+jobs:
+  release:
+    runs-on: ubuntu-latest
+  steps:
+    - name: Bump version
+      id: bump_version
+      run: |
+        echo "version"=node .public/getVersion.js ${{github.event.inputs.bumpType}} >> $GITHUB_OUTPUT
+    - name: Print previous
+      run: |
+        echo ${{steps.bump_version.version}}
+      
+
+    
