@@ -3,13 +3,21 @@ on:
   workflow_dispatch:
     inputs:
       branch:
+        description: "Branch to build"
         required: true
         default: tauri
-      version:
+      bumpType:
+        description: "Update type(major, minor, patch)"
+        type: choice
+        options:
+          - major
+          - minor
+          - patch
         required: true
-        default: 0.0.2
+        default: patch
       changelog:
         required: true
+        description: "Changelog to be included"
 jobs:
   release:
     strategy:
@@ -30,7 +38,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
-          repository: 'bluecopa/blui'
+          repository: "bluecopa/blui"
           ref: ${{ github.event.inputs.branch }}
           token: ${{ secrets.PAT }}
       # for projects that use labels and PRs,
@@ -39,13 +47,16 @@ jobs:
       - name: Build Changelog
         id: build_changelog
         run: echo "changelog=${{github.event.inputs.changelog}}" >> $GITHUB_OUTPUT
-
       - name: Node.js setup
         uses: actions/setup-node@v3
         # NOTE: enterprise developers may hard code a version
         with:
           node-version: latest
           # node-version-file: '.nvmrc'
+      - name: Bump version
+        id: bump_version
+        run: |
+          echo "version=$(npx -y run-func .public/getVersion.js getVersionParseRelease ${{ github.event.inputs.bumpType }})" >> $GITHUB_OUTPUT
       - name: Install pnpm
         uses: pnpm/action-setup@v2
         with:
@@ -55,30 +66,16 @@ jobs:
       - name: Rust cache
         uses: swatinem/rust-cache@v2
         with:
-          workspaces: './src-tauri -> target'
+          workspaces: "./src-tauri -> target"
       - name: Install dependencies (ubuntu only)
         if: matrix.platform == 'ubuntu-latest'
         run: |
           sudo apt-get update
           sudo apt-get install -y libgtk-3-dev webkit2gtk-4.0 libappindicator3-dev librsvg2-dev patchelf
-      - name: Check PNPM Cache
-        uses: actions/cache@v3
-        id: pnpm-cache
-        with:
-          path: pnpm-lock.yaml
-          key: ${{ runner.os }}-${{ hashFiles('pnpm-lock.yaml') }}
       - name: Install web dependencies
-        if: steps.pnpm-cache.outputs.cache-hit != 'true'
         run: pnpm install
-      - name: Save Pnpm Cache
-        if: steps.pnpm-cache.outputs.cache-hit != 'true'
-        id: save-cache-pnpm
-        uses: actions/cache/save@v3
-        with:
-          path: pnpm-lock.yaml
-          key: ${{ runner.os }}-${{ hashFiles('pnpm-lock.yaml') }}
       - name: Navigate to tauri-app & Build web
-        run: pwd && cd apps/tauri-app && pnpm build        
+        run: pwd && cd apps/tauri-app && pnpm build
       - name: Build the app
         uses: tauri-apps/tauri-action@v0
         env:
@@ -86,11 +83,11 @@ jobs:
           TAURI_PRIVATE_KEY: ${{ secrets.TAURI_PRIVATE_KEY }}
           TAURI_KEY_PASSWORD: ${{ secrets.TAURI_KEY_PASSWORD }}
         with:
-          tagName: v${{github.event.inputs.version}}
-          releaseName: "Bluecopa Desktop App v${{github.event.inputs.version}}"
+          tagName: v${{steps.bump_version.outputs.version}}
+          releaseName: "Bluecopa Desktop App v${{steps.bump_version.outputs.version}}"
           releaseBody: |
             ${{steps.build_changelog.outputs.changelog}}
             See the assets to download this version and install.
           releaseDraft: false
           prerelease: false
-          releaseId: v${{github.event.inputs.version}}
+          releaseId: v${{steps.bump_version.outputs.version}}
