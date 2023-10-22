@@ -21,10 +21,13 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: '18'
+      - name: Test bump v
+        run: |
+          npx -y run-func .public/getVersion.js getVersionParseRelease 'minor')
       - name: Bump version
         id: bump_version
         run: |
-          version=$(npx -y run-func .public/getVersion.js getVersionParseRelease 'patch') && echo "version=$version" >> $GITHUB_OUTPUT
+          echo `version=$(npx -y run-func .public/getVersion.js getVersionParseRelease 'patch')` >> $GITHUB_OUTPUT
       - name: Print previous
         run: |
           echo ${{steps.bump_version.version}}
