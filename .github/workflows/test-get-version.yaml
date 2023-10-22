@@ -24,8 +24,7 @@ jobs:
       - name: Bump version
         id: bump_version
         run: |
-          version=$(npx -y run-func .public/getVersion.js getVersionParseRelease 'patch') && |
-          echo "version=$version" >> $GITHUB_OUTPUT
+          version=$(npx -y run-func .public/getVersion.js getVersionParseRelease 'patch') && echo "version=$version" >> $GITHUB_OUTPUT
       - name: Print previous
         run: |
           echo ${{steps.bump_version.version}}
