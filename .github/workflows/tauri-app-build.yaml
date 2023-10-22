@@ -77,17 +77,3 @@ jobs:
           releaseDraft: false
           prerelease: false
           releaseId: v${{github.event.inputs.version}}
-  update:
-    needs: release
-    runs-on: ubuntu-latest
-    steps:
-      - name: Call update API
-        uses: indiesdev/curl@v1.1
-        with:
-          # The target URL
-          # Required: true if custom-config is not set
-          url: ${{secrets.VERCEL_APP_CACHE_KV_REST_API_URL}}/set/latest_release
-          method: 'POST'
-          body: '{"desktop":"v${{github.event.inputs.version}}" }'
-          headers: '{ "Authorization": "Bearer ${{ secrets.VERCEL_APP_CACHE_KV_REST_API_TOKEN }}" }'
- 
