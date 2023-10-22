@@ -1,6 +1,3 @@
-const { promisify } = require('util');
-const exec = promisify(require('child_process').exec)
-
 module.exports.getVersionParseRelease = async function (argv) {
     //bumpType can be major, minor, or patch
     const bumpType = argv;
@@ -38,12 +35,3 @@ module.exports.getVersionParseRelease = async function (argv) {
     }
 
 }
-
-module.exports.getVersion = async function (argv) {
-    const bumpType = argv;
-    console.log('bumpType', bumpType);
-    const versionOutput = await exec(`npx -y run-func .public/getVersion.js  'patch'`);
-    return versionOutput.stdout.trim();
-}
-
-
