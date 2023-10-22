@@ -50,10 +50,8 @@ jobs:
         uses: pnpm/action-setup@v2
         with:
           version: 7
-
       - name: Install Rust (Stable)
         run: curl https://sh.rustup.rs -sSf | sh -s -- -y
-
       - name: Rust cache
         uses: swatinem/rust-cache@v2
         with:
@@ -73,13 +71,13 @@ jobs:
       - name: Install web dependencies
         if: steps.pnpm-cache.outputs.cache-hit != 'true'
         run: pnpm install
-    - name: Save Pnpm Cache
-      if: steps.pnpm-cache.outputs.cache-hit != 'true'
-      id: save-cache-pnpm
-      uses: actions/cache/save@v3
-      with:
-        path: ../../pnpm-lock.yaml
-        key: ${{ runner.os }}-${{ hashFiles('**/lockfiles') }}
+      - name: Save Pnpm Cache
+        if: steps.pnpm-cache.outputs.cache-hit != 'true'
+        id: save-cache-pnpm
+        uses: actions/cache/save@v3
+        with:
+          path: ../../pnpm-lock.yaml
+          key: ${{ runner.os }}-${{ hashFiles('**/lockfiles') }}
       - name: Build web
         run: pnpm build        
       - name: Build the app
