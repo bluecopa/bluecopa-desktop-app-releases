@@ -61,12 +61,10 @@ jobs:
         run: |
           sudo apt-get update
           sudo apt-get install -y libgtk-3-dev webkit2gtk-4.0 libappindicator3-dev librsvg2-dev patchelf
-      - name: Navigate to tauri-app
-        run: cd apps/tauri-app
-      - uses: actions/cache@v3
+     - uses: actions/cache@v3
         id: pnpm-cache
         with:
-          path: ../../pnpm-lock.yaml
+          path: pnpm-lock.yaml
           key: ${{ runner.os }}-${{ hashFiles('**/lockfiles') }}
       - name: Install web dependencies
         if: steps.pnpm-cache.outputs.cache-hit != 'true'
@@ -76,10 +74,10 @@ jobs:
         id: save-cache-pnpm
         uses: actions/cache/save@v3
         with:
-          path: ../../pnpm-lock.yaml
+          path: pnpm-lock.yaml
           key: ${{ runner.os }}-${{ hashFiles('**/lockfiles') }}
-      - name: Build web
-        run: pnpm build        
+      - name: Navigate to tauri-app & Build web
+        run: pwd && cd apps/tauri-app && pnpm build        
       - name: Build the app
         uses: tauri-apps/tauri-action@v0
         env:
