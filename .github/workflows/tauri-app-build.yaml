@@ -19,7 +19,31 @@ on:
         required: true
         description: "Changelog to be included"
 jobs:
+  bump_version:
+    runs-on: ubuntu-latest
+    outputs:
+      version: ${{ steps.bump_version.outputs.version }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          repository: "bluecopa/blui"
+          ref: ${{ github.event.inputs.branch }}
+          token: ${{ secrets.PAT }}
+      - name: Node.js setup
+        uses: actions/setup-node@v3
+        # NOTE: enterprise developers may hard code a version
+        with:
+          node-version: latest
+          # node-version-file: '.nvmrc'
+      - name: Bump version
+        id: bump_version
+        run: |
+          echo "version=$(npx -y run-func .public/getVersion.js getVersionParseRelease ${{ github.event.inputs.bumpType }})" >> $GITHUB_OUTPUT
+      - name: Print version
+        run: echo ${{steps.bump_version.outputs.version}}
   release:
+    needs: bump_version
     strategy:
       fail-fast: false
       matrix:
@@ -53,12 +77,6 @@ jobs:
         with:
           node-version: latest
           # node-version-file: '.nvmrc'
-      - name: Bump version
-        id: bump_version
-        run: |
-          echo "version=$(npx -y run-func .public/getVersion.js getVersionParseRelease ${{ github.event.inputs.bumpType }})" >> $GITHUB_OUTPUT
-      - name: Print version
-        run: echo ${{steps.bump_version.outputs.version}}
       - name: Install pnpm
         uses: pnpm/action-setup@v2
         with:
@@ -79,7 +97,7 @@ jobs:
       - name: Navigate to tauri-app & Build web
         run: pwd && cd apps/tauri-app && pnpm build
       - name: Print version
-        run: echo ${{steps.bump_version.outputs.version}}
+        run: echo ${{ needs.bump_version.outputs.version }}
       - name: Build the app
         uses: tauri-apps/tauri-action@v0
         env:
@@ -87,9 +105,9 @@ jobs:
           TAURI_PRIVATE_KEY: ${{ secrets.TAURI_PRIVATE_KEY }}
           TAURI_KEY_PASSWORD: ${{ secrets.TAURI_KEY_PASSWORD }}
         with:
-          tagName: "${{ steps.bump_version.outputs.version }}"
-          releaseId: ${{steps.bump_version.outputs.version}}
-          releaseName: "Bluecopa Desktop App ${{ steps.bump_version.outputs.version }}"
+          tagName: ${{ needs.bump_version.outputs.version }}
+          releaseId: ${{needs.bump_version.outputs.version}}
+          releaseName: "Bluecopa Desktop App ${{ needs.bump_version.outputs.version }}"
           releaseBody: |
             ${{steps.build_changelog.outputs.changelog}}
             See the assets to download this version and install.
