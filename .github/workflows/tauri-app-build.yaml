@@ -78,6 +78,8 @@ jobs:
         run: pnpm install
       - name: Navigate to tauri-app & Build web
         run: pwd && cd apps/tauri-app && pnpm build
+      - name: Print version
+        run: echo ${{steps.bump_version.outputs.version}}
       - name: Build the app
         uses: tauri-apps/tauri-action@v0
         env:
@@ -85,11 +87,11 @@ jobs:
           TAURI_PRIVATE_KEY: ${{ secrets.TAURI_PRIVATE_KEY }}
           TAURI_KEY_PASSWORD: ${{ secrets.TAURI_KEY_PASSWORD }}
         with:
-          tagName: ${{steps.bump_version.outputs.version}}
-          releaseName: "Bluecopa Desktop App ${{steps.bump_version.outputs.version}}"
+          tagName: "${{ steps.bump_version.outputs.version }}"
+          releaseId: ${{steps.bump_version.outputs.version}}
+          releaseName: "Bluecopa Desktop App ${{ steps.bump_version.outputs.version }}"
           releaseBody: |
             ${{steps.build_changelog.outputs.changelog}}
             See the assets to download this version and install.
           releaseDraft: false
           prerelease: false
-          releaseId: ${{steps.bump_version.outputs.version}}
