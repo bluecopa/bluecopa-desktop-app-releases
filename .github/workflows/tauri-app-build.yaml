@@ -57,6 +57,8 @@ jobs:
         id: bump_version
         run: |
           echo "version=$(npx -y run-func .public/getVersion.js getVersionParseRelease ${{ github.event.inputs.bumpType }})" >> $GITHUB_OUTPUT
+      - name: Print version
+        run: echo ${{steps.bump_version.outputs.version}}
       - name: Install pnpm
         uses: pnpm/action-setup@v2
         with:
