@@ -117,9 +117,9 @@ jobs:
           TAURI_PRIVATE_KEY: ${{ secrets.TAURI_PRIVATE_KEY }}
           TAURI_KEY_PASSWORD: ${{ secrets.TAURI_KEY_PASSWORD }}
         with:
-          tagName: ${{ needs.bump_version.outputs.version }}
+          tagName: "v${{ needs.bump_version.outputs.version }}"
           releaseId: ${{needs.bump_version.outputs.version}}
-          releaseName: "Bluecopa Desktop App ${{ needs.bump_version.outputs.version }}"
+          releaseName: "Bluecopa Desktop App v${{ needs.bump_version.outputs.version }}"
           releaseBody: |
             ${{steps.build_changelog.outputs.changelog}}
             See the assets to download this version and install.
