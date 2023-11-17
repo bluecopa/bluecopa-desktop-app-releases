@@ -1,4 +1,4 @@
-name: Copa Desktop app builder
+name: Copa Node Tally Sync app builder
 on:
   workflow_dispatch:
     inputs:
