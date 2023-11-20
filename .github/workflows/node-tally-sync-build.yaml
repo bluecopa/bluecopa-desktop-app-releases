@@ -61,9 +61,4 @@ jobs:
       - name: Print version
         run: echo ${{ needs.bump_version.outputs.version }}
       - name: Package into node binary
-        uses: lando/pkg-action@v2
-        with:
-          entrypoint: bin/cli
-          arch: ${{ matrix.arch }}
-          node-version: ${{ matrix.node-version }}
-          os: ${{ matrix.os }}
+        run: npm run package 
