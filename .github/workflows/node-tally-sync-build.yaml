@@ -62,3 +62,9 @@ jobs:
         run: echo ${{ needs.bump_version.outputs.version }}
       - name: Package into node binary
         run: npm i && npm run package 
+      - name: Upload release artifacts
+        uses: Roang-zero1/github-upload-release-artifacts-action@v2
+        with:
+          args: "dist"
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
