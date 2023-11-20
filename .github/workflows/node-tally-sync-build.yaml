@@ -5,7 +5,7 @@ on:
       branch:
         description: "Branch to build"
         required: true
-        default: tally-to-xl
+        default: dev
       bumpType:
         description: "Update type(major, minor, patch)"
         type: choice
@@ -16,7 +16,7 @@ on:
         required: true
         default: patch
       changelog:
-        required: true
+        required: false
         description: "Changelog to be included"
 jobs:
   release:
