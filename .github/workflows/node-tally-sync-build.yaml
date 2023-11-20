@@ -61,4 +61,4 @@ jobs:
       - name: Print version
         run: echo ${{ needs.bump_version.outputs.version }}
       - name: Package into node binary
-        run: npm run package 
+        run: npm i && npm run package 
