@@ -62,12 +62,14 @@ jobs:
         run: echo ${{ needs.bump_version.outputs.version }}
       - name: Package into node binary
         run: npm i && npm run package 
-      - name: Upload binaries to release
-        uses: svenstaro/upload-release-action@v2
+      - name: Emit a Github Release
+        uses: "marvinpinto/action-automatic-releases@latest"
         with:
-          repo_token: ${{ secrets.GITHUB_TOKEN }}
-          file: "bin/"
-          asset_name: mything
-          tag: ${{ github.ref }}
-          overwrite: true
-          body: "This is my release text"
+          repo_token: "${{ secrets.GITHUB_TOKEN }}"
+          automatic_release_tag: "latest"
+          prerelease: true
+          title: "Development Build"
+          files: |
+            bin/tally2xl-linux
+            bin/tally2xl-macos
+            bin/tally2xl-win.exe
