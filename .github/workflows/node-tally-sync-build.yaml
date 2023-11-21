@@ -67,6 +67,7 @@ jobs:
       - name: Release with Notes
         uses: softprops/action-gh-release@v1
         with:
+          tag_name: tally-to-xl-v0.0.1
           files: |
             /bin/tally2xl-linux
             /bin/tally2xl-macos
