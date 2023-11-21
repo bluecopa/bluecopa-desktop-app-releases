@@ -15,11 +15,16 @@ on:
           - patch
         required: true
         default: patch
+      version: 
+        description: "Version to be released"
+        required: true
+        default: 0.0.1
       changelog:
         required: false
         description: "Changelog to be included"
 jobs:
   release:
+    runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
