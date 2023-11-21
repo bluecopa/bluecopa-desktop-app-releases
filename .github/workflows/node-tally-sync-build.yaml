@@ -17,6 +17,9 @@ on:
           - patch
         required: true
         default: patch
+      version:
+        description: "Version to be used"
+        required: false
       changelog:
         required: false
         description: "Changelog to be included"
@@ -52,7 +55,7 @@ jobs:
       - name: Release with Notes
         uses: softprops/action-gh-release@v1
         with:
-          tag_name: tally-to-xl-v0.0.1
+          tag_name: tally-to-xl-v{{github.event.inputs.version}}
           files: |
             bin/tally2xl-linux
             bin/tally2xl-macos
