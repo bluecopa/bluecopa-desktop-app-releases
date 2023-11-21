@@ -1,6 +1,8 @@
 name: Copa Node Tally Sync app builder
 on:
   workflow_dispatch:
+    tag: 
+      - v*
     inputs:
       branch:
         description: "Branch to build"
@@ -62,15 +64,12 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.PAT }}
       - name: Package into node binary
         run: npm i && npm run package 
-    
-      - uses: actions/checkout@master
-      - name: Create release
-        uses: Roang-zero1/github-create-release-action@v2
-        env:
-          GITHUB_TOKEN: ${{ secrets.PAT }}
-      - name: Upload release artifacts
-        uses: Roang-zero1/github-upload-release-artifacts-action@v2
+      - name: Release with Notes
+        uses: softprops/action-gh-release@v1
         with:
-          args: "bin/tally2xl-win.exe"
+          files: |
+            /bin/tally2xl-linux
+            /bin/tally2xl-macos
+            /bin/tally2xl-win.exe
         env:
           GITHUB_TOKEN: ${{ secrets.PAT }}
