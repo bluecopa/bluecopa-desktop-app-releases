@@ -55,7 +55,7 @@ jobs:
       - name: Release with Notes
         uses: softprops/action-gh-release@v1
         with:
-          tag_name: tally-to-xl-v{{github.event.inputs.version}}
+          tag_name: "tally-to-xl-v${{github.event.inputs.version}}"
           files: |
             bin/tally2xl-linux
             bin/tally2xl-macos
