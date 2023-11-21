@@ -54,8 +54,8 @@ jobs:
         with:
           tag_name: tally-to-xl-v0.0.1
           files: |
-            /bin/tally2xl-linux
-            /bin/tally2xl-macos
-            /bin/tally2xl-win.exe
+            bin/tally2xl-linux
+            bin/tally2xl-macos
+            bin/tally2xl-win.exe
         env:
           GITHUB_TOKEN: ${{ secrets.PAT }}
