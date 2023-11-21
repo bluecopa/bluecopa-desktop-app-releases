@@ -58,16 +58,45 @@ jobs:
         run: |
           sudo apt-get update
           sudo apt-get install -y libgtk-3-dev webkit2gtk-4.0 libappindicator3-dev librsvg2-dev patchelf
-      - name: Print version
-        run: echo ${{ needs.bump_version.outputs.version }}
+      - name: version
+        run: echo "::set-output name=version::$(./bin --version)"
+      - name: release
+        uses: actions/create-release@v1
+        id: create_release
+        with:
+          draft: false
+          prerelease: false
+          release_name: ${{ steps.version.outputs.print_version }}
+          tag_name: ${{ github.ref }}
+          body_path: CHANGELOG.md
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
       - name: Package into node binary
         run: npm i && npm run package 
-      - name: Emit a Github Release
-        uses: "marvinpinto/action-automatic-releases@latest"
+      - name: upload linux artifact
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
         with:
-          repo_token: "${{ secrets.GITHUB_TOKEN }}"
-          title: "Development Build"
-          files: |
-            bin/tally2xl-linux
-            bin/tally2xl-macos
-            bin/tally2xl-win.exe
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./bin
+          asset_name: tally2xl-linux
+          asset_content_type: application/gzip
+      - name: upload darwin artifact
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./bin
+          asset_name: tally2xl-macos
+          asset_content_type: application/gzip
+      - name: upload windows artifact
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./bin
+          asset_name: tally2xl-win.exe
+          asset_content_type: application/zip
