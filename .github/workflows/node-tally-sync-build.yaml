@@ -61,7 +61,7 @@ jobs:
       - name: version
         run: echo "::set-output name=version::$(./bin --version)"
       - name: checking where i am
-        run: pwd
+        run: pwd && ls -la
       - name: Creating a github release
         uses: actions/create-release@v1
         id: create_release
