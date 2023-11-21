@@ -15,7 +15,7 @@ on:
           - patch
         required: true
         default: patch
-      version: 
+      version:
         description: "Version to be released"
         required: true
         default: 0.0.1
@@ -49,13 +49,13 @@ jobs:
         with:
           draft: false
           prerelease: false
-          release_name: 'tally2xl-v0.0.1'
+          release_name: "tally2xl-v0.0.1"
           tag_name: tally-to-xl
           body_path: CHANGELOG.md
         env:
           GITHUB_TOKEN: ${{ secrets.PAT }}
       - name: Package into node binary
-        run: npm i && npm run package 
+        run: npm i && npm run package
       - name: check folder contents
         run: cd bin && ls -la
       - name: upload linux artifact
