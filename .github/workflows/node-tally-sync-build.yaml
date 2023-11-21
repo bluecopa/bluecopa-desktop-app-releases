@@ -60,7 +60,9 @@ jobs:
           sudo apt-get install -y libgtk-3-dev webkit2gtk-4.0 libappindicator3-dev librsvg2-dev patchelf
       - name: version
         run: echo "::set-output name=version::$(./bin --version)"
-      - name: release
+      - name: checking where i am
+        run: pwd
+      - name: Creating a github release
         uses: actions/create-release@v1
         id: create_release
         with:
