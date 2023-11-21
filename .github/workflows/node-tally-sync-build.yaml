@@ -20,20 +20,6 @@ on:
         description: "Changelog to be included"
 jobs:
   release:
-    strategy:
-      fail-fast: false
-      matrix:
-        platform: [macos-latest, ubuntu-latest, windows-latest]
-        include:
-          - os: ubuntu-latest
-            rust_target: x86_64-unknown-linux-gnu
-          - os: macos-latest
-            rust_target: x86_64-apple-darwin
-          - os: macos-latest
-            rust_target: aarch64-apple-darwin
-          - os: windows-latest
-            rust_target: x86_64-pc-windows-msvc
-    runs-on: ${{ matrix.platform }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -41,9 +27,6 @@ jobs:
           repository: "bluecopa/tally-to-xl"
           ref: ${{ github.event.inputs.branch }}
           token: ${{ secrets.PAT }}
-      # for projects that use labels and PRs,
-      # try https://github.com/mikepenz/release-changelog-builder-action instead
-      # TODO: use API to collect commit messages
       - name: Build Changelog
         id: build_changelog
         run: echo "changelog=${{github.event.inputs.changelog}}" >> $GITHUB_OUTPUT
@@ -53,13 +36,6 @@ jobs:
         with:
           node-version: latest
           # node-version-file: '.nvmrc'
-      - name: Install dependencies (ubuntu only)
-        if: matrix.platform == 'ubuntu-latest'
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y libgtk-3-dev webkit2gtk-4.0 libappindicator3-dev librsvg2-dev patchelf
-      - name: version
-        run: echo "::set-output name=version::$(./bin --version)"
       - name: checking where i am
         run: pwd && ls -la
       - name: Creating a github release
@@ -75,6 +51,8 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.PAT }}
       - name: Package into node binary
         run: npm i && npm run package 
+      - name: check folder contents
+        run: cd bin && ls -la
       - name: upload linux artifact
         uses: actions/upload-release-asset@v1
         env:
