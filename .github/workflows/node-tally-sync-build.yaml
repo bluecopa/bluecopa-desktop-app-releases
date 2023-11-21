@@ -42,28 +42,13 @@ jobs:
         with:
           node-version: latest
           # node-version-file: '.nvmrc'
-      - name: Install dependencies (ubuntu only)
-        if: matrix.platform == 'ubuntu-latest'
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y libgtk-3-dev webkit2gtk-4.0 libappindicator3-dev librsvg2-dev patchelf
+      
       - name: version
         run: echo "::set-output name=version::$(./bin --version)"
       - name: checking where i am
         run: pwd && ls -la
-      - name: Creating a github release
-        uses: actions/create-release@v1
-        id: create_release
-        with:
-          draft: false
-          prerelease: false
-          release_name: 'tally2xl-v0.0.1'
-          tag_name: tally-to-xl
-          body_path: CHANGELOG.md
-        env:
-          GITHUB_TOKEN: ${{ secrets.PAT }}
       - name: Package into node binary
-        run: npm i && npm run package 
+        run: npm i && npm run package && cd /bin && ls -la
       - name: Release with Notes
         uses: softprops/action-gh-release@v1
         with:
