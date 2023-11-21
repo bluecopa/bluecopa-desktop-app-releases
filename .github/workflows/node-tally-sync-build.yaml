@@ -68,17 +68,17 @@ jobs:
         with:
           draft: false
           prerelease: false
-          release_name: ${{ steps.version.outputs.print_version }}
-          tag_name: ${{ github.ref }}
+          release_name: 'tally2xl-v0.0.1'
+          tag_name: tally-to-xl
           body_path: CHANGELOG.md
         env:
-          GITHUB_TOKEN: ${{ github.token }}
+          GITHUB_TOKEN: ${{ secrets.PAT }}
       - name: Package into node binary
         run: npm i && npm run package 
       - name: upload linux artifact
         uses: actions/upload-release-asset@v1
         env:
-          GITHUB_TOKEN: ${{ github.token }}
+          GITHUB_TOKEN: ${{ secrets.PAT }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
           asset_path: ./bin
@@ -87,7 +87,7 @@ jobs:
       - name: upload darwin artifact
         uses: actions/upload-release-asset@v1
         env:
-          GITHUB_TOKEN: ${{ github.token }}
+          GITHUB_TOKEN: ${{ secrets.PAT }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
           asset_path: ./bin
@@ -96,7 +96,7 @@ jobs:
       - name: upload windows artifact
         uses: actions/upload-release-asset@v1
         env:
-          GITHUB_TOKEN: ${{ github.token }}
+          GITHUB_TOKEN: ${{ secrets.PAT }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
           asset_path: ./bin
