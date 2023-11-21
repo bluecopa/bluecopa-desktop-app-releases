@@ -1,13 +1,14 @@
+---
 name: Copa Node Tally Sync app builder
 on:
   workflow_dispatch:
     inputs:
       branch:
-        description: "Branch to build"
+        description: Branch to build
         required: true
         default: dev
       bumpType:
-        description: "Update type(major, minor, patch)"
+        description: Update type(major, minor, patch)
         type: choice
         options:
           - major
@@ -16,12 +17,12 @@ on:
         required: true
         default: patch
       version:
-        description: "Version to be released"
+        description: Version to be released
         required: true
         default: 0.0.1
       changelog:
         required: false
-        description: "Changelog to be included"
+        description: Changelog to be included
 jobs:
   release:
     runs-on: ubuntu-latest
@@ -29,7 +30,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
-          repository: "bluecopa/tally-to-xl"
+          repository: bluecopa/tally-to-xl
           ref: ${{ github.event.inputs.branch }}
           token: ${{ secrets.PAT }}
       - name: Build Changelog
@@ -37,10 +38,8 @@ jobs:
         run: echo "changelog=${{github.event.inputs.changelog}}" >> $GITHUB_OUTPUT
       - name: Node.js setup
         uses: actions/setup-node@v3
-        # NOTE: enterprise developers may hard code a version
         with:
           node-version: latest
-          # node-version-file: '.nvmrc'
       - name: checking where i am
         run: pwd && ls -la
       - name: Creating a github release
@@ -49,7 +48,7 @@ jobs:
         with:
           draft: false
           prerelease: false
-          release_name: "tally2xl-v0.0.1"
+          release_name: tally2xl-v0.0.1
           tag_name: tally-to-xl
           body_path: CHANGELOG.md
         env:
@@ -61,15 +60,14 @@ jobs:
   upload:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@master
-    - name: Create release
-      uses: Roang-zero1/github-create-release-action@v2
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-    - name: Upload release artifacts
-      uses: Roang-zero1/github-upload-release-artifacts-action@v2
-      with:
-        args: "/bin/tally2xl-win.exe"
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      
+      - uses: actions/checkout@master
+      - name: Create release
+        uses: Roang-zero1/github-create-release-action@v2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Upload release artifacts
+        uses: Roang-zero1/github-upload-release-artifacts-action@v2
+        with:
+          args: /bin/tally2xl-win.exe
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
