@@ -1,4 +1,4 @@
-name: Copa Node Tally Sync app builder
+name: RCC builder
 on:
   workflow_dispatch:
     tag:
