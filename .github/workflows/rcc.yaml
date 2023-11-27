@@ -63,7 +63,7 @@ jobs:
         with:
           tag_name: "rcc-v${{github.event.inputs.version}}"
           files: |
-            build/signed/rcc.exe
+            signed/rcc.exe
             build/linux64/rcc.exe
             build/macos64/rcc.exe
         env:
