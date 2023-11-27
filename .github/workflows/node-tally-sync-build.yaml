@@ -19,7 +19,7 @@ on:
         default: patch
       version:
         description: "Version to be used"
-        required: false
+        required: true
       changelog:
         required: false
         description: "Changelog to be included"
