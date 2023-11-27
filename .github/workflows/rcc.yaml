@@ -25,6 +25,7 @@ on:
         description: "Changelog to be included"
 jobs:
   release:
+    name: Build
     runs-on: ubuntu-latest
     steps:
       - uses: actions/setup-go@v3
@@ -44,6 +45,7 @@ jobs:
       - name: Building
         run: |
            mkdir signed
+           ls -ltr
            rake clean build
       - name: Sign Artifact with CodeSignTool
         uses: sslcom/esigner-codesign@develop
