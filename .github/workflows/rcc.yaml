@@ -1,0 +1,70 @@
+name: Copa Node Tally Sync app builder
+on:
+  workflow_dispatch:
+    tag:
+      - v*
+    inputs:
+      branch:
+        description: "Branch to build"
+        required: true
+        default: bluecopa_build
+      bumpType:
+        description: "Update type(major, minor, patch)"
+        type: choice
+        options:
+          - major
+          - minor
+          - patch
+        required: true
+        default: patch
+      version:
+        description: "Version to be used"
+        required: true
+      changelog:
+        required: false
+        description: "Changelog to be included"
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/setup-go@v3
+        with:
+          go-version: '1.20.x'
+      - uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: '2.7'
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          repository: "bluecopa/rcc"
+          ref: ${{ github.event.inputs.branch }}
+          token: ${{ secrets.PAT }}
+      - name: What
+        run: rake what
+      - name: Building
+        run: |
+           mkdir signed
+           rake clean build
+      - name: Sign Artifact with CodeSignTool
+        uses: sslcom/esigner-codesign@develop
+        with:
+          command: sign
+          username: "bipul@bluecopa.com"
+          password: ${{ secrets.ESIGNER_PASSWORD }}
+          credential_id: "1d3e2805-6cf4-4363-bc74-08271908842b"
+          totp_secret: ${{ secrets.ESIGNER_TOTP_SECRET }}
+          file_path: build/windows64/rcc.exe
+          output_path: signed/
+          malware_block: false
+          environment_name: PROD
+
+      - name: Release with Notes
+        uses: softprops/action-gh-release@v1
+        with:
+          tag_name: "rcc-v${{github.event.inputs.version}}"
+          files: |
+            build/signed/rcc.exe
+            build/linux64/rcc.exe
+            build/macos64/rcc.exe
+        env:
+          GITHUB_TOKEN: ${{ secrets.PAT }}
