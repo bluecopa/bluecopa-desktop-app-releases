@@ -34,7 +34,7 @@ jobs:
         uses: actions/setup-node@v3
         # NOTE: enterprise developers may hard code a version
         with:
-          node-version: 18
+          node-version: 18.8.2
           # node-version-file: '.nvmrc'
       - name: Bump version
         id: bump_version
@@ -75,7 +75,7 @@ jobs:
         uses: actions/setup-node@v3
         # NOTE: enterprise developers may hard code a version
         with:
-          node-version: latest
+          node-version: 18.8.2
           # node-version-file: '.nvmrc'
       - name: Install Rust (Stable)
         run: curl https://sh.rustup.rs -sSf | sh -s -- -y
